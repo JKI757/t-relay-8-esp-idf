@@ -14,5 +14,5 @@ License: MIT
 
 
 - References: 
-* [lilygo product link](https://www.lilygo.cc/products/t-relay-5v-8-channel-relay)
-* [lilygo github](https://github.com/Xinyuan-LilyGO/LilyGo-T-Relay)
+  * [lilygo product link](https://www.lilygo.cc/products/t-relay-5v-8-channel-relay)
+  * [lilygo github](https://github.com/Xinyuan-LilyGO/LilyGo-T-Relay)
