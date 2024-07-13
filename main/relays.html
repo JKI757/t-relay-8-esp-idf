@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Relay Control</title>
+    <style>
+        .relay-on {
+            background-color: green;
+        }
+        .relay-off {
+            background-color: red;
+        }
+        button {
+            padding: 15px;
+            font-size: 16px;
+            margin: 5px;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Relay Control</h2>
+    <div id="relay-buttons">
+        <!-- Buttons will be dynamically created here -->
+    </div>
+    <script>
+        const relays = 8;
+        const relayButtons = document.getElementById('relay-buttons');
+
+        function updateButton(id, state) {
+            const button = document.getElementById(id);
+            button.className = state ? 'relay-on' : 'relay-off';
+            button.textContent = `Relay ${id.split('-')[1]}: ${state ? 'ON' : 'OFF'}`;
+        }
+
+        function toggleRelay(id) {
+            const relayId = id.split('-')[1];
+            fetch(`/toggle?relay=${relayId}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateButton(id, data.state);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        (function fetchRelayStates() {
+            setTimeout(() => {
+
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 1; i <= relays; i++) {
+                        updateButton(`relay-${i}`, data[`relay${i}`]);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+                fetchRelayStates();
+        }, 200);
+        })();
+
+        for (let i = 1; i <= relays; i++) {
+            const button = document.createElement('button');
+            button.id = `relay-${i}`;
+            button.onclick = () => toggleRelay(button.id);
+            relayButtons.appendChild(button);
+        }
+
+        // Initial fetch to get the states
+        // fetchRelayStates();
+
+        // Periodically fetch relay states
+        // setInterval(fetchRelayStates, 100); // Fetch every 200 ms
+    </script>
+</body>
+</html>
